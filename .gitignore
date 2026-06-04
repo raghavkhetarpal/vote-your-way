@@ -69,7 +69,7 @@ dmypy.json
 data/processed/*
 data/manifestoes/*
 data/completion/*
-models/*
+
 
 # Keep some data directories but ignore data files
 !data/processed/.gitkeep
