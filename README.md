@@ -1,4 +1,4 @@
-# ManifestoAI — India Election Intelligence
+# VoteYourWay — India Election Intelligence
 
 A full-stack ML application to analyse Indian political party manifestoes, track promise completion, and make data-driven voting recommendations.
 
