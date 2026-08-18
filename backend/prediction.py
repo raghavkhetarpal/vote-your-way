@@ -25,8 +25,8 @@ try:
     SMOTE_AVAILABLE = True
 except ImportError:
     SMOTE_AVAILABLE = False
-from preprocessing import preprocess_sentence
-from feature_engineering import compute_keyword_features, KEYWORD_GROUPS
+from .preprocessing import preprocess_sentence
+from .feature_engineering import compute_keyword_features, KEYWORD_GROUPS
 
 MODELS_DIR = Path(__file__).parent.parent / "models"
 PROCESSED_DIR = Path(__file__).parent.parent / "data" / "processed"

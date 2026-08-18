@@ -1,0 +1,108 @@
+[
+  {
+    "id": "BJP_2009_0",
+    "party": "BJP",
+    "year": "2009",
+    "label": "BJP_2009",
+    "promise": "Increase agricultural production to 15-20 tonnes per hectare",
+    "category": "Others",
+    "specificity": "high",
+    "source": "groq",
+    "completion_status": "Not Started",
+    "completion_probability": null,
+    "category_confidence": 0.28013783793772296,
+    "scraped_articles": [
+      {
+        "title": "PDFAgricultural Statistics at a Glance 2024",
+        "url": "//duckduckgo.com/l/?uddg=https%3A%2F%2Fdesagri.gov.in%2Fwp%2Dcontent%2Fuploads%2F2025%2F11%2FAgricultural%2DStatistics%2Dat%2Da%2DGlance%2D2024_%25E0%25A4%2595%25E0%25A5%2583%25E0%25A4%25B7%25E0%25A4%25BF%2D%25E0%25A4%25B8%25E0%25A4%25BE%25E0%25A4%2582%25E0%25A4%2596%25E0%25A5%258D%25E0%25A4%25AF%25E0%25A4%25BF%25E0%25A4%2595%25E0%25A5%2580%2D%25E0%25A4%258F%25E0%25A4%2595%2D%25E0%25A4%259D%25E0%25A4%25B2%25E0%25A4%2595%2D2024.pdf&rut=706ab0895532ffee3e7d2c9d7f4c0ce74a8ba15cf3a1cae115ec3e49d6749ade",
+        "snippet": "2.58India'sImports and Exports of PrincipalAgriculturalCommodities 2.59India'sImports of PrincipalAgriculturalCommodities 2.60India'sExports of PrincipalAgriculturalCommodities 2.61 Tariffs and Bound Rates on MajorAgriculturalCommodities/Groups 2.62(a) Statement on financial year-wise FDI equity inflows from April 2001 to June ...",
+        "source": "DuckDuckGo"
+      },
+      {
+        "title": "What The BJP Promised But Failed To Deliver To India's Farmers",
+        "url": "//duckduckgo.com/l/?uddg=https%3A%2F%2Ftribe.article%2D14.com%2Fpost%2Fwhat%2Dthe%2Dbjp%2Dpromised%2Dbut%2Dfailed%2Dto%2Ddeliver%2Dto%2Dindia%2Ds%2Dfarmers%2D%2D6621e2dcc9c2b&rut=5907e29c51c4a04767e3b19aa70bbbf24a8ce0e94ced02f3518bd17d9fedf9ff",
+        "snippet": "A civil society initiative of social science researchers and volunteers has analysed 33 promises related to the farm sector in the Bharatiya Janata Party's 2019 election manifesto. It found a series of non-starter schemes, much lower investments towards improving farm productivity than promised, and inadequate coverage by welfare schemes such as the Pradhan Mantri Kisan Samman Nidhi Yojana ...",
+        "source": "DuckDuckGo"
+      },
+      {
+        "title": "PDFEmpowering Indian Farmers",
+        "url": "//duckduckgo.com/l/?uddg=https%3A%2F%2Fstatic.pib.gov.in%2FWriteReadData%2Fspecificdocs%2Fdocuments%2F2025%2Fjun%2Fdoc202567565801.pdf&rut=88c9607b7f93f4ad42764bf1232b7e0eda0226a0c570e65681ca4b3c677f9df9",
+        "snippet": "Increased Food GrainProductionIndia'sfoodgrainproductiongrew steadily from 265.05 milliontonnesin 2014-15to an estimated 347.44 milliontonnesin 2024-25, showing a strong rise inagriculturaloutput.",
+        "source": "DuckDuckGo"
+      },
+      {
+        "title": "PDFAgricultural Statistics at A Glance 2024-25",
+        "url": "//duckduckgo.com/l/?uddg=https%3A%2F%2Fnccd.gov.in%2Fuploads%2FAgricultural_Statisitcs_at_a_Glance_2024_25_11da3cd37d.pdf&rut=67f499de671d5d18a1e59c8a0e1c9704b40202985562faf182a76291a54fc2c9",
+        "snippet": "AgriculturalStatistics at a Glance2024-25GovernmentofIndiaMinistry of Agriculture & Farmers Welfare Department of Agriculture & Farmers Welfare Economics, Statistics & Evaluation Division",
+        "source": "DuckDuckGo"
+      },
+      {
+        "title": "Agricultural Statistics at a Glance 2024 | Official website of ...",
+        "url": "//duckduckgo.com/l/?uddg=https%3A%2F%2Fdesagri.gov.in%2Fdocument%2Dreport%2Fagricultural%2Dstatistics%2Dat%2Da%2Dglance%2D2024%2F&rut=7f38f8d62985dc13c4922f14c755291c20c6e4793842c1a0ba1abe73467eb0a6",
+        "snippet": "Note: Content on this website is published and managed by of Directorate of Economics and Statistics, Department of Agriculture Cooperation and Farmers Welfare, Ministry of Agriculture and Farmers Welfare,GovernmentofIndiaFor any query regarding this website, please contact the web information manager, Name: Ruchi Sharma",
+        "source": "DuckDuckGo"
+      }
+    ],
+    "article_count": 5
+  },
+  {
+    "id": "BJP_2009_1",
+    "party": "BJP",
+    "year": "2009",
+    "label": "BJP_2009",
+    "promise": "Rediscovers an agricultural technology that incorporates all the inputs from our own wisdom and agricultural skills",
+    "category": "Others",
+    "specificity": "low",
+    "source": "groq",
+    "completion_status": "Not Started",
+    "completion_probability": null,
+    "category_confidence": 0.3215627504365203,
+    "scraped_articles": [],
+    "article_count": 0
+  },
+  {
+    "id": "BJP_2009_2",
+    "party": "BJP",
+    "year": "2009",
+    "label": "BJP_2009",
+    "promise": "Increase production of paddy to 5.5 tonnes per hectare in Ludhiana",
+    "category": "Others",
+    "specificity": "high",
+    "source": "groq",
+    "completion_status": "Not Started",
+    "completion_probability": null,
+    "category_confidence": 0.3062414611753163,
+    "scraped_articles": [],
+    "article_count": 0
+  },
+  {
+    "id": "BJP_2009_3",
+    "party": "BJP",
+    "year": "2009",
+    "label": "BJP_2009",
+    "promise": "Make India a land of abundance in food",
+    "category": "Others",
+    "specificity": "low",
+    "source": "groq",
+    "completion_status": "Not Started",
+    "completion_probability": null,
+    "category_confidence": 0.3342549626771929,
+    "scraped_articles": [],
+    "article_count": 0
+  },
+  {
+    "id": "BJP_2009_4",
+    "party": "BJP",
+    "year": "2009",
+    "label": "BJP_2009",
+    "promise": "Make Indian villages clean and hospitable",
+    "category": "Others",
+    "specificity": "low",
+    "source": "groq",
+    "completion_status": "Not Started",
+    "completion_probability": null,
+    "category_confidence": 0.5013218256105679,
+    "scraped_articles": [],
+    "article_count": 0
+  }
+]

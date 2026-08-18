@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
-from preprocessing import preprocess_sentence
+from .preprocessing import preprocess_sentence
 
 MODELS_DIR = Path(__file__).parent.parent / "models"
 MODELS_DIR.mkdir(parents=True, exist_ok=True)

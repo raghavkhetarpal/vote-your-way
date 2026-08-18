@@ -1,0 +1,41 @@
+{
+  "clusters": [
+    {
+      "id": 1,
+      "parties": [
+        "BJP"
+      ],
+      "size": 1
+    },
+    {
+      "id": 0,
+      "parties": [
+        "INC"
+      ],
+      "size": 1
+    }
+  ],
+  "party_clusters": {
+    "BJP": 1,
+    "INC": 0
+  },
+  "pca_coords": [
+    {
+      "party": "BJP",
+      "x": 10.535653752852737,
+      "y": -6.4153217019552075e-15,
+      "cluster": 1
+    },
+    {
+      "party": "INC",
+      "x": -10.535653752852722,
+      "y": -6.4153217019552185e-15,
+      "cluster": 0
+    }
+  ],
+  "party_labels": [
+    "BJP",
+    "INC"
+  ],
+  "n_clusters": 2
+}

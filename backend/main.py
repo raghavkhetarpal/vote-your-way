@@ -3,26 +3,27 @@ main.py - FastAPI backend server for Manifesto Analyzer
 """
 import os
 import json
-import threading
-import asyncio
 import base64
+import hmac
 from pathlib import Path
 from typing import List, Dict, Optional, Any
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Query, Header
+from fastapi import FastAPI, HTTPException, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # ─── Auth Setup ───
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "manifesto123")
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+# A public deployment must never expose the long-running write-heavy pipeline
+# merely because an environment variable was omitted.
+PIPELINE_ENABLED = os.getenv("PIPELINE_ENABLED", "false").lower() == "true"
 
 def verify_auth(authorization: Optional[str] = Header(None)) -> bool:
     """Verify basic auth credentials"""
-    if not authorization:
+    if not authorization or not ADMIN_USERNAME or not ADMIN_PASSWORD:
         return False
     try:
         scheme, credentials = authorization.split()
@@ -30,8 +31,8 @@ def verify_auth(authorization: Optional[str] = Header(None)) -> bool:
             return False
         decoded = base64.b64decode(credentials).decode("utf-8")
         username, password = decoded.split(":", 1)
-        return username == ADMIN_USERNAME and password == ADMIN_PASSWORD
-    except:
+        return hmac.compare_digest(username, ADMIN_USERNAME) and hmac.compare_digest(password, ADMIN_PASSWORD)
+    except (ValueError, UnicodeDecodeError):
         return False
 
 app = FastAPI(
@@ -41,19 +42,21 @@ app = FastAPI(
 )
 
 # ─── CORS Setup ───
-origins = [
+origins = {
     "http://localhost:3000",
     "http://localhost:5173",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
-]
-# Add production URLs from env
-if prod_url := os.getenv("FRONTEND_URL"):
-    origins.append(prod_url)
+}
+# FRONTEND_URL is retained for backwards compatibility; FRONTEND_URLS supports
+# preview and custom domains without widening CORS to every origin.
+for configured_origins in (os.getenv("FRONTEND_URL"), os.getenv("FRONTEND_URLS")):
+    if configured_origins:
+        origins.update(origin.strip().rstrip("/") for origin in configured_origins.split(",") if origin.strip())
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=sorted(origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -111,15 +114,15 @@ def update_status(status: str, progress: int, message: str):
 
 def run_pipeline(force_rerun: bool = False, use_scraper: bool = False):
     print("🔥 PIPELINE PROCESS STARTED")
-    from ingestion import load_all_manifestoes
-    from preprocessing import preprocess_all_manifestoes
-    from promise_extraction import extract_all_promises
-    from classification import classify_promises
-    from clustering import cluster_parties
-    from apriori import run_apriori
-    from completion_analysis import analyze_all_completions
-    from prediction import predict_completion_probabilities
-    from scoring import score_all_parties
+    from .ingestion import load_all_manifestoes
+    from .preprocessing import preprocess_all_manifestoes
+    from .promise_extraction import extract_all_promises
+    from .classification import classify_promises
+    from .clustering import cluster_parties
+    from .apriori import run_apriori
+    from .completion_analysis import analyze_all_completions
+    from .prediction import predict_completion_probabilities
+    from .scoring import score_all_parties
 
     try:
         update_status("running", 1, "Starting pipeline...")
@@ -204,22 +207,32 @@ def get_status():
     }
 
 
+@app.get("/api/health")
+def health_check():
+    """Lightweight deployment health check that never loads models or PDFs."""
+    return {"status": "ok", "demo_data_available": (PROCESSED_DIR / "predictions.json").exists()}
+
+
 @app.post("/api/pipeline/run")
 def trigger_pipeline(request: PipelineRequest, authorization: Optional[str] = Header(None)):
-    # ✅ Verify authentication
+    if not PIPELINE_ENABLED:
+        raise HTTPException(
+            status_code=403,
+            detail="The public demo serves precomputed results. Run the pipeline locally or enable it on a dedicated persistent backend.",
+        )
+
     if not verify_auth(authorization):
-        raise HTTPException(status_code=401, detail="Unauthorized: Invalid or missing credentials")
+        raise HTTPException(status_code=401, detail="Unauthorized: configure valid pipeline credentials")
     
     if _cache["pipeline_status"] == "running":
         return {"message": "Pipeline already running"}
 
     _cache["pipeline_status"] = "running"
 
-    thread = threading.Thread(
-        target=run_pipeline,
-        args=(request.force_rerun, request.use_scraper),
-        daemon=True
-    )
+    # This route is deliberately for persistent processes only. Serverless
+    # functions can be frozen as soon as the response is returned.
+    import threading
+    thread = threading.Thread(target=run_pipeline, args=(request.force_rerun, request.use_scraper), daemon=True)
     thread.start()
 
     return {"message": "Pipeline started"}
@@ -228,10 +241,17 @@ def trigger_pipeline(request: PipelineRequest, authorization: Optional[str] = He
 def get_manifestoes():
     """Get list of loaded manifestoes."""
     if _cache["manifestoes"] is None:
-        # Try loading from disk
-        from ingestion import load_all_manifestoes
-        manifestoes = load_all_manifestoes()
-        _cache["manifestoes"] = [{k: v for k, v in m.items() if k != 'raw_text'} for m in manifestoes]
+        # The public demo ships a lightweight metadata cache. Prefer it over
+        # re-parsing all PDFs on a cold worker; fall back to PDFs for local
+        # pipeline development if the cache has not been generated yet.
+        cache_path = PROCESSED_DIR / "manifestoes_cache.json"
+        if cache_path.exists():
+            with cache_path.open("r", encoding="utf-8") as file:
+                _cache["manifestoes"] = json.load(file)
+        else:
+            from .ingestion import load_all_manifestoes
+            manifestoes = load_all_manifestoes()
+            _cache["manifestoes"] = [{k: v for k, v in m.items() if k != 'raw_text'} for m in manifestoes]
     
     return {"manifestoes": _cache["manifestoes"] or [], "count": len(_cache["manifestoes"] or [])}
 
@@ -239,7 +259,7 @@ def get_manifestoes():
 @app.get("/api/manifestoes/{party}/{year}/text")
 def get_manifesto_text(party: str, year: str):
     """Get raw text of a specific manifesto."""
-    from ingestion import MANIFESTOES_DIR, load_manifesto
+    from .ingestion import MANIFESTOES_DIR, load_manifesto
     
     for pdf_file in MANIFESTOES_DIR.glob("*.pdf"):
         meta_part = pdf_file.stem.lower()
@@ -310,7 +330,7 @@ def get_custom_scores(request: ScoreRequest):
     if not promises:
         raise HTTPException(status_code=400, detail="No promise data available. Run pipeline first.")
     
-    from scoring import score_all_parties, generate_recommendation
+    from .scoring import score_all_parties, generate_recommendation
     
     cat_weights = request.category_weights.dict() if request.category_weights else None
     print(f"📊 Custom scoring: weights={cat_weights}, priority={request.priority_category}")
@@ -325,11 +345,11 @@ def get_recommendation(priority_category: Optional[str] = Query(None)):
     """Get party recommendation."""
     scores = _cache.get("scores") or []
     if not scores:
-        from scoring import load_party_scores
+        from .scoring import load_party_scores
         scores = load_party_scores()
     if not scores:
         return {"best_overall": None, "overall_rank": [], "rationale": {}}
-    from scoring import generate_recommendation
+    from .scoring import generate_recommendation
     return generate_recommendation(scores, priority_category)
 
 
@@ -482,4 +502,4 @@ def get_category_analysis(category: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)

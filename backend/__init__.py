@@ -1,0 +1,1 @@
+"""VoteYourWay backend package."""

@@ -25,8 +25,8 @@ echo.
 echo [3/3] Starting servers...
 
 REM ---- START BACKEND ----
-cd /d "%ROOT%backend"
-start "Backend" cmd /k python -m uvicorn main:app --host 127.0.0.1 --port 8000 --no-access-log --log-level warning
+cd /d "%ROOT%"
+start "Backend" cmd /k python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log --log-level warning
 
 REM ---- START FRONTEND ----
 cd /d "%ROOT%frontend"

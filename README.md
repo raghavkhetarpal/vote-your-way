@@ -1,178 +1,105 @@
 # VoteYourWay — India Election Intelligence
 
-A full-stack ML application to analyse Indian political party manifestoes, track promise completion, and make data-driven voting recommendations.
+VoteYourWay is a React and FastAPI application for exploring Indian political-party manifestoes, promise-completion analysis, ML predictions, clustering, association rules, and personalised rankings.
 
-## Tech Stack
+The public demo intentionally serves a versioned, precomputed snapshot. That keeps it fast and dependable for visitors while retaining the full PDF/NLP/ML pipeline for local analysis and controlled persistent-backend runs.
 
-| Layer | Technology |
-|-------|-----------|
-| Backend | Python + FastAPI |
-| Frontend | React + Vite + Tailwind CSS + Recharts |
-| PDF Parsing | pdfplumber + PyMuPDF |
-| NLP | NLTK (tokenize, lemmatize, stopwords) |
-| ML | scikit-learn (Decision Tree, Logistic Regression, K-Means) |
-| Association Mining | mlxtend (Apriori) |
-| LLM (limited) | Groq API (promise extraction + completion matching only) |
-| Web Scraping | requests + BeautifulSoup |
+## Deployment architecture
 
-## Quick Start
-
-### Linux / macOS
-```bash
-chmod +x start.sh
-./start.sh
+```text
+Vercel (React / Vite) ── HTTPS ──> Render (FastAPI read-only API)
+                                      └── committed PDFs, JSON outputs, and models
 ```
 
-### Windows
-```cmd
-start.bat
-```
+This is preferable to deploying the pipeline as a Vercel Python function: PDF extraction, NLTK data downloads, Groq calls/retries, scraping, model retraining, thread-based work, and disk writes can exceed serverless execution and persistence guarantees. The backend is deliberately configured with `PIPELINE_ENABLED=false` in the public deployment. The existing pipeline is not removed; it can be run locally or on a separately controlled persistent service.
 
-Then open **http://localhost:3000** and click **Run Pipeline**.
+## Runtime data that must be committed
 
----
+The public API reads the following versioned artifacts. They must be included in Git before deploying from GitHub:
 
-## Manual Setup
+- `data/manifestoes/*.pdf` — six BJP/INC manifestoes (2009, 2014, 2019)
+- `data/processed/predictions.json`, `party_scores.json`, `clustering_results.json`, and `apriori_results.json`
+- `models/*.pkl` — classifier and prediction model artifacts, needed for an enabled pipeline
+- `data/completion/*.json` and the other processed JSON outputs — reproducibility/supporting pipeline inputs
 
-### 1. Backend
+They are no longer ignored by `.gitignore`. Verify this once before committing:
 
 ```bash
-cd backend
-python3 -m venv ../venv
-source ../venv/bin/activate          # Windows: ..\venv\Scripts\activate
-pip install -r requirements.txt
+git add data models
+git status
 ```
 
-#### Configure Groq API (optional but recommended)
+Do not commit API keys or private source data. `backend/.env` remains ignored.
+
+## Deploy the public demo
+
+### 1. Deploy the API to Render
+
+Create a Render Blueprint deployment from this repository; `render.yaml` installs `backend/requirements.txt` and starts `backend.main:app` from the repository root.
+
+Set these Render environment variables:
+
+```text
+PIPELINE_ENABLED=false
+FRONTEND_URLS=https://YOUR-VERCEL-PROJECT.vercel.app
+```
+
+After deployment, open `https://YOUR-RENDER-SERVICE/api/health`. It should return `"status": "ok"` and `"demo_data_available": true`.
+
+### 2. Deploy the frontend to Vercel
+
+Import the same repository in Vercel and set **Root Directory** to `frontend`.
+
+Set this build-time environment variable (no trailing slash):
+
+```text
+VITE_API_BASE_URL=https://YOUR-RENDER-SERVICE.onrender.com
+```
+
+Vercel runs `npm run build`. `frontend/vercel.json` makes React Router deep links resolve to the SPA entry point. Add the final Vercel URL (and any custom domain) to Render's `FRONTEND_URLS`, comma-separated, then redeploy Render.
+
+## Local development
+
+Requirements: Python 3.11, Node.js 18+, and the tracked `data/` artifacts.
+
 ```bash
-# Edit backend/.env
-GROQ_API_KEY=your_groq_api_key_here
+python3 -m venv venv
+source venv/bin/activate
+pip install -r backend/requirements.txt
+npm --prefix frontend ci
+uvicorn backend.main:app --reload --port 8000
 ```
-Get a free key at https://console.groq.com
 
-### 2. Generate Sample PDFs
+In another terminal:
+
 ```bash
-cd ..  # project root
-python generate_sample_manifestoes.py
-```
-This creates 6 sample manifesto PDFs (BJP & INC × 2009/2014/2019) in `/data/manifestoes/`.
-
-**To use your own PDFs:** Copy them to `/data/manifestoes/` with format `partycode_year.pdf`:
-```
-bjp_2024.pdf
-inc_2024.pdf
-aap_2024.pdf
+npm --prefix frontend run dev
 ```
 
-### 3. Start Backend
-```bash
-cd backend
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
+The Vite development proxy routes `/api` to `http://localhost:8000`; no frontend environment variable is needed locally. `./start.sh` and `start.bat` automate the same startup flow.
 
-### 4. Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
+## Running the full pipeline
 
-Open **http://localhost:3000**
+Copy `backend/.env.example` to `backend/.env`, then set a non-default `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Set `PIPELINE_ENABLED=true` only on your local machine or a persistent worker/service you control. `GROQ_API_KEY` is optional; without it, deterministic rule-based extraction and completion analysis are used.
 
----
+The pipeline writes PDFs-derived and model artifacts under `data/` and `models/`, may call Groq, and can scrape external sites only if requested. Review the generated files before committing a new demo snapshot. Do not expose pipeline credentials in a public frontend: browser Basic Auth is only a local/admin convenience, not a visitor-facing feature.
 
-## How It Works
+## API
 
-### ML Pipeline (triggered by "Run Pipeline" button)
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Lightweight deployment health check |
+| GET | `/api/status` | Demo artifact availability and local pipeline status |
+| GET | `/api/manifestoes` | Available manifesto PDFs |
+| GET | `/api/promises` | Filterable precomputed promises |
+| GET | `/api/scores` | Party scores |
+| POST | `/api/scores/custom` | In-memory personalised scoring |
+| GET | `/api/recommendation` | Recommendation from saved scores |
+| GET | `/api/clustering` | Saved clustering output |
+| GET | `/api/apriori` | Saved association-rule output |
+| GET | `/api/analytics/overview` | Dashboard aggregate data |
+| POST | `/api/pipeline/run` | Disabled in public deployment; authenticated when explicitly enabled |
 
-1. **PDF Ingestion** — pdfplumber/PyMuPDF extracts clean text
-2. **Preprocessing** — NLTK tokenisation, stopword removal, lemmatisation
-3. **Promise Extraction** — Rule-based keywords + Groq LLM refinement
-4. **Classification** — Decision Tree (ID3) classifies into 10 categories
-5. **Completion Analysis** — Web scraping + Groq semantic matching
-6. **K-Means Clustering** — Clusters parties by TF-IDF + category features
-7. **Apriori Mining** — Discovers category co-occurrence rules
-8. **Logistic Regression** — Predicts completion probability (0–1)
-9. **Scoring** — Weighted formula produces final party score
+## Tech stack
 
-### Scoring Formula
-```
-Score = (completion_rate × 0.40) +
-        (predicted_completion_strength × 0.20) +
-        (category_coverage × 0.15) +
-        (promise_density × 0.10) +
-        (consistency_score × 0.15)
-```
-
-### Prediction Interpretation
-- **> 70%** → 🟢 Likely
-- **40–70%** → 🟡 Uncertain
-- **< 40%** → 🔴 Unlikely
-
----
-
-## Project Structure
-
-```
-manifesto_app/
-├── backend/
-│   ├── main.py                 # FastAPI server
-│   ├── ingestion.py            # PDF loading
-│   ├── preprocessing.py        # NLP pipeline
-│   ├── promise_extraction.py   # Hybrid extraction
-│   ├── feature_engineering.py  # TF-IDF + features
-│   ├── classification.py       # Decision Tree
-│   ├── clustering.py           # K-Means
-│   ├── apriori.py              # Association rules
-│   ├── scraper.py              # Web scraper
-│   ├── completion_analysis.py  # Status analysis
-│   ├── prediction.py           # Logistic Regression
-│   ├── scoring.py              # Party scoring
-│   ├── requirements.txt
-│   └── .env
-├── frontend/
-│   └── src/
-│       ├── App.jsx
-│       ├── pages/
-│       │   ├── Dashboard.jsx
-│       │   ├── ManifestoViewer.jsx
-│       │   ├── PromiseExplorer.jsx
-│       │   ├── CompletionPanel.jsx
-│       │   ├── ComparisonDashboard.jsx
-│       │   └── Recommendation.jsx
-│       └── utils/api.js
-├── data/
-│   ├── manifestoes/    ← Put PDF files here
-│   ├── completion/     ← Scraped data
-│   └── processed/      ← ML outputs
-├── models/             ← Saved ML models
-├── generate_sample_manifestoes.py
-├── start.sh
-└── start.bat
-```
-
----
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/status | Pipeline status |
-| POST | /api/pipeline/run | Start ML pipeline |
-| GET | /api/manifestoes | List manifestoes |
-| GET | /api/promises | Get promises (filterable) |
-| GET | /api/scores | Party scores |
-| POST | /api/scores/custom | Custom weighted scores |
-| GET | /api/recommendation | Party recommendation |
-| GET | /api/clustering | K-Means results |
-| GET | /api/apriori | Association rules |
-| GET | /api/analytics/overview | Dashboard data |
-
----
-
-## Notes
-
-- **LLM Usage**: Groq is used ONLY for promise extraction and completion semantic matching. All ML predictions use scikit-learn models.
-- **Data persists**: Results cached in `/data/processed/`. Use "Re-run" to refresh.
-- **Web scraping**: Enabled via `use_scraper: true` in pipeline request. Rate-limited by default.
-- **Dark mode**: Toggle via sidebar button.
+React, Vite, Tailwind CSS, FastAPI, pdfplumber, PyMuPDF, NLTK, scikit-learn, mlxtend, Groq (optional), requests, and BeautifulSoup.

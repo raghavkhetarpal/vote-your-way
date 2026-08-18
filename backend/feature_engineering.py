@@ -1,18 +1,13 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sentence_transformers import SentenceTransformer
 import numpy as np
 import joblib
 import re
 from pathlib import Path
 from typing import List, Dict, Tuple
-from preprocessing import preprocess_sentence
+from .preprocessing import preprocess_sentence
 
 MODELS_DIR = Path(__file__).parent.parent / "models"
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
-
-# Load embedding model (global for efficiency)
-EMBEDDER = SentenceTransformer('all-MiniLM-L6-v2')
-
 
 KEYWORD_GROUPS = {
     "budget": ["budget", "crore", "lakh", "billion", "million", "fund", "allocat", "invest", "expenditure", "fiscal"],
@@ -66,8 +61,17 @@ def engineer_features(promises: List[Dict], vectorizer=None, fit=True):
 
     tfidf_dense = tfidf_matrix.toarray()
 
-    # 🔥 NEW: Embeddings
-    embeddings = EMBEDDER.encode(texts)
+    # Embeddings are only needed by this optional feature-engineering helper,
+    # not by the runtime prediction path. Lazy import prevents a model download
+    # and large cold start when the API is only serving precomputed artifacts.
+    try:
+        from sentence_transformers import SentenceTransformer
+    except ImportError as exc:
+        raise RuntimeError(
+            "Optional embedding features require `sentence-transformers`. "
+            "Install it before calling engineer_features()."
+        ) from exc
+    embeddings = SentenceTransformer('all-MiniLM-L6-v2').encode(texts)
 
     # Handcrafted features
     handcrafted = []

@@ -1,8 +1,10 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 120000,
+  // Leave unset for local Vite proxying; set VITE_API_BASE_URL to the Render
+  // service URL (without a trailing slash) in Vercel.
+  baseURL: `${import.meta.env.VITE_API_BASE_URL || ''}/api`,
+  timeout: 30000,
 })
 
 // Store auth credentials

@@ -6,7 +6,7 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
-from preprocessing import preprocess_sentence
+from .preprocessing import preprocess_sentence
 
 MODELS_DIR = Path(__file__).parent.parent / "models"
 PROCESSED_DIR = Path(__file__).parent.parent / "data" / "processed"

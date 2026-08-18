@@ -1,0 +1,390 @@
+{
+  "frequent_itemsets": [
+    {
+      "itemset": [
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Economy"
+      ],
+      "support": 1.0,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Education"
+      ],
+      "support": 1.0,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Others"
+      ],
+      "support": 1.0,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Economy",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Education",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Others",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Education",
+        "Economy"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Others",
+        "Economy"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Education",
+        "Others"
+      ],
+      "support": 1.0,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Education",
+        "Economy",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 3
+    },
+    {
+      "itemset": [
+        "Others",
+        "Economy",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 3
+    },
+    {
+      "itemset": [
+        "Education",
+        "Others",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 3
+    },
+    {
+      "itemset": [
+        "Education",
+        "Others",
+        "Economy"
+      ],
+      "support": 1.0,
+      "length": 3
+    },
+    {
+      "itemset": [
+        "Others",
+        "Education",
+        "Economy",
+        "Defence"
+      ],
+      "support": 1.0,
+      "length": 4
+    },
+    {
+      "itemset": [
+        "Agriculture"
+      ],
+      "support": 0.833,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Infrastructure"
+      ],
+      "support": 0.833,
+      "length": 1
+    },
+    {
+      "itemset": [
+        "Agriculture",
+        "Defence"
+      ],
+      "support": 0.833,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Agriculture",
+        "Economy"
+      ],
+      "support": 0.833,
+      "length": 2
+    },
+    {
+      "itemset": [
+        "Agriculture",
+        "Education"
+      ],
+      "support": 0.833,
+      "length": 2
+    }
+  ],
+  "rules": [
+    {
+      "antecedents": [
+        "Agriculture"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 0.833,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Agriculture"
+      ],
+      "consequents": [
+        "Economy"
+      ],
+      "support": 0.833,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Agriculture"
+      ],
+      "consequents": [
+        "Education"
+      ],
+      "support": 0.833,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Healthcare"
+      ],
+      "consequents": [
+        "Agriculture"
+      ],
+      "support": 0.333,
+      "confidence": 1.0,
+      "lift": 1.2
+    },
+    {
+      "antecedents": [
+        "Agriculture"
+      ],
+      "consequents": [
+        "Others"
+      ],
+      "support": 0.833,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Economy"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Defence"
+      ],
+      "consequents": [
+        "Economy"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Education"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Defence"
+      ],
+      "consequents": [
+        "Education"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Healthcare"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 0.333,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Infrastructure"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 0.833,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Others"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Defence"
+      ],
+      "consequents": [
+        "Others"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Youth"
+      ],
+      "consequents": [
+        "Defence"
+      ],
+      "support": 0.5,
+      "confidence": 1.0,
+      "lift": 1.0
+    },
+    {
+      "antecedents": [
+        "Education"
+      ],
+      "consequents": [
+        "Economy"
+      ],
+      "support": 1.0,
+      "confidence": 1.0,
+      "lift": 1.0
+    }
+  ],
+  "transactions": [
+    [
+      "Economy",
+      "Defence",
+      "Healthcare",
+      "Education",
+      "Others",
+      "Agriculture",
+      "Infrastructure",
+      "Youth"
+    ],
+    [
+      "Economy",
+      "Defence",
+      "Healthcare",
+      "Education",
+      "Others",
+      "Agriculture",
+      "Infrastructure"
+    ],
+    [
+      "Economy",
+      "Defence",
+      "Education",
+      "Others",
+      "Agriculture",
+      "Infrastructure"
+    ],
+    [
+      "Economy",
+      "Defence",
+      "Education",
+      "Others",
+      "Infrastructure",
+      "Youth"
+    ],
+    [
+      "Economy",
+      "Defence",
+      "Education",
+      "Others",
+      "Agriculture",
+      "Infrastructure"
+    ],
+    [
+      "Defence",
+      "Economy",
+      "Education",
+      "Others",
+      "Agriculture",
+      "Youth"
+    ]
+  ],
+  "min_support_used": 0.3,
+  "summary": {
+    "total_transactions": 6,
+    "total_frequent_itemsets": 175,
+    "total_rules": 1770
+  }
+}

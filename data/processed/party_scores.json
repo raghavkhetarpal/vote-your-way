@@ -1,0 +1,84 @@
+[
+  {
+    "party": "BJP",
+    "scores": {
+      "completion_rate": 0.274,
+      "category_coverage": 0.6,
+      "promise_density": 1.0,
+      "predicted_completion_strength": 0.606,
+      "consistency_score": 0.414,
+      "final_score": 0.483,
+      "total_promises": 285,
+      "completed_promises": 78,
+      "in_progress_promises": 73,
+      "failed_promises": 25,
+      "likely_completions": 234
+    },
+    "category_distribution": {
+      "Economy": 42,
+      "Education": 12,
+      "Healthcare": 10,
+      "Infrastructure": 4,
+      "Agriculture": 19,
+      "Women": 0,
+      "Youth": 3,
+      "Environment": 0,
+      "Defence": 28,
+      "Others": 182
+    },
+    "category_completion_rates": {
+      "Economy": 0.405,
+      "Education": 0.417,
+      "Healthcare": 0.3,
+      "Infrastructure": 0.0,
+      "Agriculture": 0.053,
+      "Women": 0.0,
+      "Youth": 0.333,
+      "Environment": 0.0,
+      "Defence": 0.393,
+      "Others": 0.253
+    },
+    "rank": 1
+  },
+  {
+    "party": "INC",
+    "scores": {
+      "completion_rate": 0.334,
+      "category_coverage": 0.5,
+      "promise_density": 1.0,
+      "predicted_completion_strength": 0.607,
+      "consistency_score": 0.286,
+      "final_score": 0.473,
+      "total_promises": 287,
+      "completed_promises": 96,
+      "in_progress_promises": 57,
+      "failed_promises": 40,
+      "likely_completions": 237
+    },
+    "category_distribution": {
+      "Economy": 66,
+      "Education": 11,
+      "Healthcare": 0,
+      "Infrastructure": 7,
+      "Agriculture": 8,
+      "Women": 0,
+      "Youth": 2,
+      "Environment": 0,
+      "Defence": 18,
+      "Others": 188
+    },
+    "category_completion_rates": {
+      "Economy": 0.333,
+      "Education": 0.455,
+      "Healthcare": 0.0,
+      "Infrastructure": 0.571,
+      "Agriculture": 0.625,
+      "Women": 0.0,
+      "Youth": 0.0,
+      "Environment": 0.0,
+      "Defence": 0.167,
+      "Others": 0.33
+    },
+    "rank": 2
+  }
+]

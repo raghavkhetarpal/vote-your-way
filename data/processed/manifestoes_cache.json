@@ -1,0 +1,56 @@
+[
+  {
+    "filename": "bjp_2009.pdf",
+    "party": "BJP",
+    "party_code": "bjp",
+    "year": "2009",
+    "label": "BJP_2009",
+    "word_count": 16602,
+    "char_count": 106031
+  },
+  {
+    "filename": "bjp_2014.pdf",
+    "party": "BJP",
+    "party_code": "bjp",
+    "year": "2014",
+    "label": "BJP_2014",
+    "word_count": 9891,
+    "char_count": 64460
+  },
+  {
+    "filename": "bjp_2019.pdf",
+    "party": "BJP",
+    "party_code": "bjp",
+    "year": "2019",
+    "label": "BJP_2019",
+    "word_count": 18179,
+    "char_count": 113855
+  },
+  {
+    "filename": "inc_2009.pdf",
+    "party": "INC",
+    "party_code": "inc",
+    "year": "2009",
+    "label": "INC_2009",
+    "word_count": 9265,
+    "char_count": 58838
+  },
+  {
+    "filename": "inc_2014.pdf",
+    "party": "INC",
+    "party_code": "inc",
+    "year": "2014",
+    "label": "INC_2014",
+    "word_count": 16884,
+    "char_count": 107980
+  },
+  {
+    "filename": "inc_2019.pdf",
+    "party": "INC",
+    "party_code": "inc",
+    "year": "2019",
+    "label": "INC_2019",
+    "word_count": 23188,
+    "char_count": 146614
+  }
+]

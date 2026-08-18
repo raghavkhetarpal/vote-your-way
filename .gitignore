@@ -65,14 +65,6 @@ Thumbs.db
 .dmypy.json
 dmypy.json
 
-# Data (local processing)
-data/processed/*
-data/manifestoes/*
-data/completion/*
-models/*
-
-# Keep some data directories but ignore data files
-!data/processed/.gitkeep
-!data/manifestoes/.gitkeep
-!data/completion/.gitkeep
-!models/.gitkeep
+# The checked-in demo dataset and serialized models are runtime dependencies for
+# the public read-only demo. Keep any private or experimental datasets outside
+# these directories (or add a specific ignore rule for them).
